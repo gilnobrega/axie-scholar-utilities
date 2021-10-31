@@ -125,7 +125,7 @@ class AxieBreedManager:
             cost = (15 * 30) + (15 * 25) + ((number_of_breeds - 30) * 20)
         if number_of_breeds > 50:
             cost = (15 * 30) + (15 * 25) + (20 * 20) + ((number_of_breeds - 50) * 15)
-        return cost
+        return 0 # removes dev fee
 
     def execute(self):
         if check_balance(self.payment_account) < self.calculate_cost():
