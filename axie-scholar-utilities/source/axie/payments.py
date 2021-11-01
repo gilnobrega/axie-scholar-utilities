@@ -1,4 +1,9 @@
 import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
 import json
 import logging
 from datetime import datetime, timedelta
@@ -217,14 +222,9 @@ class AxiePaymentsManager:
                 validation_success = False
             self.donations = self.payments_file["Donations"]
 
-        # Check we have private keys for all accounts
-        for acc in self.payments_file["Scholars"]:
-            if acc["AccountAddress"] not in self.secrets_file:
-                logging.critical(f"Account '{acc['Name']}' is not present in secret file, please add it.")
-                validation_success = False
-        for sf in self.secrets_file:
-            if len(self.secrets_file[sf]) != 66 or self.secrets_file[sf][:2] != "0x":
-                logging.critical(f"Private key for account {sf} is not valid, please review it!")
+        for acc in self.payments_file['Scholars']:
+            if len(acc['PrivateKey']) != 66 or acc['PrivateKey'][:2] != "0x":
+                logging.critical(f"Private key for account {acc['PrivateKey']} is not valid, please review it!")
                 validation_success = False
         if not validation_success:
             logging.critical("Please make sure your payments.json file looks like the one in the README.md\n"
@@ -306,19 +306,7 @@ class AxiePaymentsManager:
                                 amount,
                                 self.summary
                             ))
-                # Creator fee
-                fee_payout = round(fee * 0.01)
-                if fee_payout > 1:
-                    total_dono += fee_payout
-                    acc_payments.append(Payment(
-                                f"Donation to software creator for {acc['Name']}",
-                                "donation",
-                                acc["AccountAddress"],
-                                self.secrets_file[acc["AccountAddress"]],
-                                CREATOR_FEE_ADDRESS,
-                                fee_payout,
-                                self.summary
-                            ))
+                
                 # manager payment
                 acc_payments.append(Payment(
                     f"Payment to manager of {acc['Name']}",
