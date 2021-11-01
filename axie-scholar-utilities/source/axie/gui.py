@@ -9,9 +9,12 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import csv
 
+import utils
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        self.account = "ronin:080f96b040128f66b8c7330eb324154764211c52"
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
@@ -42,7 +45,10 @@ class Ui_MainWindow(object):
         self.buttonBox.setObjectName("buttonBox")
              
         self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).setText("Pay Scholars")
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).clicked.connect(self.payButton)
+
         self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Open).setText("Claim")
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Open).clicked.connect(self.claimButton)
 
         self.verticalLayout.addWidget(self.buttonBox)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -72,8 +78,17 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Axie Scholar Manager"))
-        self.label.setText(_translate("MainWindow", "Your balance: 0 SLP"))
+        self.updateBalanceUi(MainWindow)
 
+    def updateBalanceUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        self.label.setText(_translate("MainWindow", f"Your balance: {utils.check_balance(self.account)} SLP"))
+
+    def claimButton(self, MainWindow):
+        self.updateBalanceUi(MainWindow)
+
+    def payButton(self, MainWindow):
+        self.updateBalanceUi(MainWindow)
 
 if __name__ == "__main__":
     import sys
