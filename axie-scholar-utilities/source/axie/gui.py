@@ -60,6 +60,8 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
+        self.paymentsFile = "./sample_data/sample_csv_payments_file.csv"
+
         self.initTable()
 
         self.retranslateUi(MainWindow)
@@ -67,13 +69,26 @@ class Ui_MainWindow(object):
 
     # https://stackoverflow.com/questions/15416663/pyqt-populating-qtablewidget-with-csv-data
     def initTable(self):
-        with open("./sample_data/sample_csv_payments_file.csv", "r") as fileInput:
+        with open(self.paymentsFile, "r") as fileInput:
             for row in csv.reader(fileInput):
                 items = [
                     QtGui.QStandardItem(field)
                     for field in row
                 ]
                 self.model.appendRow(items)
+
+    def saveTable(self):
+        with open(self.paymentsFile, "w") as fileOutput:
+            writer = csv.writer(fileOutput)
+            for rowNumber in range(self.model.rowCount()):
+                fields = [
+                    self.model.data(
+                        self.model.index(rowNumber, columnNumber),
+                        0
+                    )
+                    for columnNumber in range(self.model.columnCount())
+                ]
+                writer.writerow(fields)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -85,9 +100,11 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", f"Your balance: {utils.check_balance(self.account)} SLP"))
 
     def claimButton(self, MainWindow):
+        self.saveTable()
         self.updateBalanceUi(MainWindow)
 
     def payButton(self, MainWindow):
+        self.saveTable()
         self.updateBalanceUi(MainWindow)
 
 if __name__ == "__main__":
