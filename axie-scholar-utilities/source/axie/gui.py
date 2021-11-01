@@ -86,13 +86,20 @@ class Ui_MainWindow(object):
 
     # https://stackoverflow.com/questions/15416663/pyqt-populating-qtablewidget-with-csv-data
     def initTable(self):
+
         with open(self.paymentsFile, "r") as fileInput:
+            i = 0
             for row in csv.reader(fileInput):
                 items = [
                     QtGui.QStandardItem(field)
                     for field in row
                 ]
                 self.model.appendRow(items)
+      
+                if row[0] == 'True':
+                    self.tableView.selectionModel().select(self.model.index(i, 0), QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+                i += 1
+
         self.tableView.setColumnHidden(0, True)
 
     def saveTable(self):
