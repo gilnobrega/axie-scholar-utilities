@@ -112,7 +112,7 @@ class Ui_MainWindow(object):
                     self.model.data(
                         self.model.index(rowNumber, columnNumber),
                         0
-                    ) if columnNumber != 0 else rowNumber in [x.row() for x in self.tableView.selectedIndexes()]
+                    ) if columnNumber != 0 else (len(self.tableView.selectionModel().selectedRows()) == 0 or rowNumber in [x.row() for x in self.tableView.selectionModel().selectedRows()])
                     for columnNumber in range(self.model.columnCount())
                 ]
                 writer.writerow(fields)
