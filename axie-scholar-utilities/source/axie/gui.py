@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'gui.ui'
+# Form implementation generated from reading ui file 'gui2.ui'
 #
 # Created by: PyQt6 UI code generator 6.2.1
 #
@@ -9,10 +9,11 @@
 from PyQt6 import QtCore, QtGui, QtWidgets
 import csv
 
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(640, 480)
+        MainWindow.resize(1280, 720)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -22,28 +23,39 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
-
-        self.model = QtGui.QStandardItemModel(MainWindow)
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setObjectName("label")
+        self.verticalLayout.addWidget(self.label)
 
         self.tableView = QtWidgets.QTableView(self.centralwidget)
-        self.tableView.setModel(self.model)
-
         self.tableView.setObjectName("tableView")
         self.verticalLayout.addWidget(self.tableView)
+
+        self.model = QtGui.QStandardItemModel(MainWindow)
+        self.tableView.setModel(self.model)
+
+        self.addButton = QtWidgets.QPushButton("Add Scholar", MainWindow)
+        self.verticalLayout.addWidget(self.addButton)
+
         self.buttonBox = QtWidgets.QDialogButtonBox(self.centralwidget)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel | QtWidgets.QDialogButtonBox.StandardButton.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Ok | QtWidgets.QDialogButtonBox.StandardButton.Open)
         self.buttonBox.setObjectName("buttonBox")
+             
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).setText("Pay Scholars")
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Open).setText("Claim")
+
         self.verticalLayout.addWidget(self.buttonBox)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 37))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 640, 24))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        
+
         self.initTable()
+
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -59,7 +71,8 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Axie Scholar Manager"))
+        self.label.setText(_translate("MainWindow", "Your balance: 0 SLP"))
 
 
 if __name__ == "__main__":

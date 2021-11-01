@@ -22,12 +22,19 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Your balance: 0 SLP</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QTableView" name="tableView"/>
     </item>
     <item>
      <widget class="QDialogButtonBox" name="buttonBox">
       <property name="standardButtons">
-       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       <set>QDialogButtonBox::Ok|QDialogButtonBox::Open</set>
       </property>
      </widget>
     </item>
@@ -39,7 +46,7 @@
      <x>0</x>
      <y>0</y>
      <width>640</width>
-     <height>37</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
