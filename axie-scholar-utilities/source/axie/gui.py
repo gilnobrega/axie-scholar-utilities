@@ -34,7 +34,8 @@ class Ui_MainWindow(object):
         self.account = "ronin:080f96b040128f66b8c7330eb324154764211c52"
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1280, 720)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred,
+                                           QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -58,7 +59,8 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.addButton)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(self.centralwidget)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Ok | QtWidgets.QDialogButtonBox.StandardButton.Open)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Ok |
+                                          QtWidgets.QDialogButtonBox.StandardButton.Open)
         self.buttonBox.setObjectName("buttonBox")
              
         self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).clicked.connect(self.payButton)
@@ -107,7 +109,9 @@ class Ui_MainWindow(object):
                 self.model.appendRow(items)
         
                 if not allSelected and row[0] == 'True':
-                    self.tableView.selectionModel().select(self.model.index(i, 0), QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
+                    self.tableView.selectionModel().select(self.model.index(i, 0),
+                                                           QtCore.QItemSelectionModel.SelectionFlag.Select |
+                                                           QtCore.QItemSelectionModel.SelectionFlag.Rows)
                 i += 1
 
         self.tableView.setColumnHidden(0, True)
@@ -125,7 +129,7 @@ class Ui_MainWindow(object):
                     self.model.data(
                         self.model.index(rowNumber, columnNumber),
                         0
-                    ) if columnNumber != 0 else (len(self.tableView.selectionModel().selectedRows()) == 0 or rowNumber in [x.row() for x in self.tableView.selectionModel().selectedRows()])
+                    ) if columnNumber != 0 else ("Selected" if columnNumber == 0 and rowNumber == 0 else len(self.tableView.selectionModel().selectedRows()) == 0 or rowNumber in [x.row() for x in self.tableView.selectionModel().selectedRows()])
                     for columnNumber in range(self.model.columnCount())
                 ]
                 writer.writerow(fields)
