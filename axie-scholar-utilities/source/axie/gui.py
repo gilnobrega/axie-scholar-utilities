@@ -93,16 +93,19 @@ class Ui_MainWindow(object):
                     for field in row
                 ]
                 self.model.appendRow(items)
+        self.tableView.setColumnHidden(0, True)
 
     def saveTable(self):
         with open(self.paymentsFile, "w") as fileOutput:
             writer = csv.writer(fileOutput)
             for rowNumber in range(self.model.rowCount()):
+
                 fields = [
+                    
                     self.model.data(
                         self.model.index(rowNumber, columnNumber),
                         0
-                    )
+                    ) if columnNumber != 0 else rowNumber in [x.row() for x in self.tableView.selectedIndexes()]
                     for columnNumber in range(self.model.columnCount())
                 ]
                 writer.writerow(fields)
