@@ -1,0 +1,62 @@
+{
+    "Manager": "ronin:080f96b040128f66b8c7330eb324154764211c52",
+    "Scholars": [
+        {
+            "Name": "Test1",
+            "AccountAddress": "ronin:abc1",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar1",
+            "ScholarPercent": 50
+        },
+        {
+            "Name": "Test2",
+            "AccountAddress": "ronin:abc2",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar2",
+            "ScholarPercent": 50
+        },
+        {
+            "Name": "Test3",
+            "AccountAddress": "ronin:abc3",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar3",
+            "ScholarPercent": 50
+        },
+        {
+            "Name": "Test4",
+            "AccountAddress": "ronin:abc4",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar4",
+            "ScholarPercent": 50
+        },
+        {
+            "Name": "Test5",
+            "AccountAddress": "ronin:abc5",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar5",
+            "ScholarPercent": 50,
+            "ScholarPayout": 100
+        },
+        {
+            "Name": "Test6",
+            "AccountAddress": "ronin:abc6",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar6",
+            "ScholarPercent": 50,
+            "ScholarPayout": 100,
+            "TrainerPayoutAddress": "ronin:abc_trainer6",
+            "TrainerPercent": 5
+        },
+        {
+            "Name": "Test7",
+            "AccountAddress": "ronin:abc7",
+            "PrivateKey": "0x",
+            "ScholarPayoutAddress": "ronin:abc_scholar7",
+            "ScholarPercent": 50,
+            "ScholarPayout": 100,
+            "TrainerPayoutAddress": "ronin:abc_trainer7",
+            "TrainerPercent": 0,
+            "ScholarPayout ": 230
+        }
+    ]
+}

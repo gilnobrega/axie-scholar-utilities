@@ -125,17 +125,16 @@ class Claim(AxieGraphQL):
 
 
 class AxieClaimsManager:
-    def __init__(self, payments_file, secrets_file):
-        self.secrets_file, self.acc_names = self.load_secrets_and_acc_name(secrets_file, payments_file)
+    def __init__(self, payments_file):
+        self.secrets_file, self.acc_names = self.load_secrets_and_acc_name(payments_file)
 
-    def load_secrets_and_acc_name(self, secrets_file, payments_file):
-        secrets = load_json(secrets_file)
+    def load_secrets_and_acc_name(self, payments_file):
         payments = load_json(payments_file)
         refined_secrets = {}
         acc_names = {}
         for scholar in payments['Scholars']:
             key = scholar['AccountAddress']
-            refined_secrets[key] = secrets[key]
+            refined_secrets[key] = scholar['PrivateKey']
             acc_names[key] = scholar['Name']
         return refined_secrets, acc_names
 

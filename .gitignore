@@ -133,6 +133,8 @@ dmypy.json
 
 # Sensitive files
 payments.json
+payments.csv.json
+paymentss.csv
 secrets.json
 
 poetry.lock
