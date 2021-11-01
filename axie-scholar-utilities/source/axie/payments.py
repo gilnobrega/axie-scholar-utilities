@@ -154,9 +154,8 @@ class Payment:
 
 
 class AxiePaymentsManager:
-    def __init__(self, payments_file, secrets_file, auto=False):
+    def __init__(self, payments_file, auto=False):
         self.payments_file = load_json(payments_file)
-        self.secrets_file = load_json(secrets_file)
         self.manager_acc = None
         self.scholar_accounts = None
         self.donations = None
@@ -258,85 +257,87 @@ class AxiePaymentsManager:
 
     def prepare_payout_amount(self):
         for acc in self.scholar_accounts:
-            fee = 0
-            total_dono = 0
-            total_payments = 0
-            acc_payments = []
-            # scholar_payment
-            acc_payments.append(Payment(
-                f"Payment to scholar of {acc['Name']}",
-                "scholar",
-                acc["AccountAddress"],
-                self.secrets_file[acc["AccountAddress"]],
-                acc["ScholarPayoutAddress"],
-                acc["ScholarPayout"],
-                self.summary
-            ))
-            fee += acc["ScholarPayout"]
-            total_payments += acc["ScholarPayout"]
-            if acc.get("TrainerPayoutAddress"):
-                # trainer_payment
+            if acc['Selected'] == 'True':
+
+                fee = 0
+                total_dono = 0
+                total_payments = 0
+                acc_payments = []
+                # scholar_payment
                 acc_payments.append(Payment(
-                    f"Payment to trainer of {acc['Name']}",
-                    "trainer",
+                    f"Payment to scholar of {acc['Name']}",
+                    "scholar",
                     acc["AccountAddress"],
                     self.secrets_file[acc["AccountAddress"]],
-                    acc["TrainerPayoutAddress"],
-                    acc["TrainerPayout"],
+                    acc["ScholarPayoutAddress"],
+                    acc["ScholarPayout"],
                     self.summary
                 ))
-                fee += acc["TrainerPayout"]
-                total_payments += acc["TrainerPayout"]
-            manager_payout = acc["ManagerPayout"]
-            fee += manager_payout
-            total_payments += acc["ManagerPayout"]
-            if self.donations:
-                for dono in self.donations:
-                    amount = round(manager_payout * dono["Percent"])
-                    if amount > 1:
-                        total_dono += amount
-                        # donation payment
-                        acc_payments.append(Payment(
-                            f"Donation to {dono['Name']} for {acc['Name']}",
-                            "donation",
-                            acc["AccountAddress"],
-                            self.secrets_file[acc["AccountAddress"]],
-                            dono["AccountAddress"],
-                            amount,
-                            self.summary
-                        ))
-            # Creator fee
-            fee_payout = round(fee * 0.01)
-            if fee_payout > 1:
-                total_dono += fee_payout
+                fee += acc["ScholarPayout"]
+                total_payments += acc["ScholarPayout"]
+                if acc.get("TrainerPayoutAddress"):
+                    # trainer_payment
+                    acc_payments.append(Payment(
+                        f"Payment to trainer of {acc['Name']}",
+                        "trainer",
+                        acc["AccountAddress"],
+                        self.secrets_file[acc["AccountAddress"]],
+                        acc["TrainerPayoutAddress"],
+                        acc["TrainerPayout"],
+                        self.summary
+                    ))
+                    fee += acc["TrainerPayout"]
+                    total_payments += acc["TrainerPayout"]
+                manager_payout = acc["ManagerPayout"]
+                fee += manager_payout
+                total_payments += acc["ManagerPayout"]
+                if self.donations:
+                    for dono in self.donations:
+                        amount = round(manager_payout * dono["Percent"])
+                        if amount > 1:
+                            total_dono += amount
+                            # donation payment
+                            acc_payments.append(Payment(
+                                f"Donation to {dono['Name']} for {acc['Name']}",
+                                "donation",
+                                acc["AccountAddress"],
+                                self.secrets_file[acc["AccountAddress"]],
+                                dono["AccountAddress"],
+                                amount,
+                                self.summary
+                            ))
+                # Creator fee
+                fee_payout = round(fee * 0.01)
+                if fee_payout > 1:
+                    total_dono += fee_payout
+                    acc_payments.append(Payment(
+                                f"Donation to software creator for {acc['Name']}",
+                                "donation",
+                                acc["AccountAddress"],
+                                self.secrets_file[acc["AccountAddress"]],
+                                CREATOR_FEE_ADDRESS,
+                                fee_payout,
+                                self.summary
+                            ))
+                # manager payment
                 acc_payments.append(Payment(
-                            f"Donation to software creator for {acc['Name']}",
-                            "donation",
-                            acc["AccountAddress"],
-                            self.secrets_file[acc["AccountAddress"]],
-                            CREATOR_FEE_ADDRESS,
-                            fee_payout,
-                            self.summary
-                        ))
-            # manager payment
-            acc_payments.append(Payment(
-                f"Payment to manager of {acc['Name']}",
-                "manager",
-                acc["AccountAddress"],
-                self.secrets_file[acc["AccountAddress"]],
-                self.manager_acc,
-                manager_payout - total_dono,
-                self.summary
-            ))
-            if not self.check_acc_has_enough_balance(acc["AccountAddress"], total_payments):
-                logging.info(f"Important: Skipping payments for account '{acc['Name']}'. "
-                             "Insufficient funds!")
-            else:
-                if manager_payout - total_dono >= 0:
-                    self.payout_account(acc["Name"], acc_payments)
+                    f"Payment to manager of {acc['Name']}",
+                    "manager",
+                    acc["AccountAddress"],
+                    self.secrets_file[acc["AccountAddress"]],
+                    self.manager_acc,
+                    manager_payout - total_dono,
+                    self.summary
+                ))
+                if not self.check_acc_has_enough_balance(acc["AccountAddress"], total_payments):
+                    logging.info(f"Important: Skipping payments for account '{acc['Name']}'. "
+                                 "Insufficient funds!")
                 else:
-                    logging.info("Fix your payments, currently after fees and donations manager "
-                                 f"is receiving a negative payment of {manager_payout - total_dono}")
+                    if manager_payout - total_dono >= 0:
+                        self.payout_account(acc["Name"], acc_payments)
+                    else:
+                        logging.info("Fix your payments, currently after fees and donations manager "
+                                     f"is receiving a negative payment of {manager_payout - total_dono}")
         logging.info(f"Important: Transactions Summary:\n {self.summary}")
 
     def prepare_payout_percent(self):

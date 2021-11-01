@@ -170,6 +170,11 @@ class Ui_MainWindow(object):
     def payButton(self, MainWindow):
         self.saveTable()
         self.updateBalanceUi(MainWindow)
+        payments_file_path = self.paymentsFile + ".json"
+
+        apm = AxiePaymentsManager(payments_file_path, auto=True)
+        apm.verify_inputs()
+        apm.prepare_payout()
 
     def updateButtonLabels(self):
         payButtonText =  "Pay all Scholars"
