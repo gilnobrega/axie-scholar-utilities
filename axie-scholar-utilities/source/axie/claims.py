@@ -134,8 +134,9 @@ class AxieClaimsManager:
         acc_names = {}
         for scholar in payments['Scholars']:
             key = scholar['AccountAddress']
-            refined_secrets[key] = scholar['PrivateKey']
-            acc_names[key] = scholar['Name']
+            if scholar['Selected'] == 'True':
+                refined_secrets[key] = scholar['PrivateKey']
+                acc_names[key] = scholar['Name']
         return refined_secrets, acc_names
 
     def verify_inputs(self):
