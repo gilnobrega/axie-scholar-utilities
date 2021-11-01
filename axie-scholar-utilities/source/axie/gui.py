@@ -7,7 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-
+import csv
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -22,11 +22,16 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
+
+        self.model = QtGui.QStandardItemModel(MainWindow)
+
         self.tableView = QtWidgets.QTableView(self.centralwidget)
+        self.tableView.setModel(self.model)
+
         self.tableView.setObjectName("tableView")
         self.verticalLayout.addWidget(self.tableView)
         self.buttonBox = QtWidgets.QDialogButtonBox(self.centralwidget)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel|QtWidgets.QDialogButtonBox.StandardButton.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Cancel | QtWidgets.QDialogButtonBox.StandardButton.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
         MainWindow.setCentralWidget(self.centralwidget)
@@ -37,9 +42,20 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
+        
+        self.initTable()
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    # https://stackoverflow.com/questions/15416663/pyqt-populating-qtablewidget-with-csv-data
+    def initTable(self):
+        with open("./sample_data/sample_csv_payments_file.csv", "r") as fileInput:
+            for row in csv.reader(fileInput):
+                items = [
+                    QtGui.QStandardItem(field)
+                    for field in row
+                ]
+                self.model.appendRow(items)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
