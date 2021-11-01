@@ -61,10 +61,7 @@ class Ui_MainWindow(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.StandardButton.Ok | QtWidgets.QDialogButtonBox.StandardButton.Open)
         self.buttonBox.setObjectName("buttonBox")
              
-        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).setText("Pay Scholars")
         self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).clicked.connect(self.payButton)
-
-        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Open).setText("Claim")
         self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Open).clicked.connect(self.claimButton)
 
         self.verticalLayout.addWidget(self.buttonBox)
@@ -85,22 +82,38 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     # https://stackoverflow.com/questions/15416663/pyqt-populating-qtablewidget-with-csv-data
-    def initTable(self):
+    def initTable(self):        
+
+        allSelected = True
 
         with open(self.paymentsFile, "r") as fileInput:
+            allSelected = True
+            csvOutput = csv.reader(fileInput)
+
+            for row in csvOutput:
+                if row[0] == 'False':
+                    allSelected = False
+
+        with open(self.paymentsFile, "r") as fileInput:
+            csvOutput = csv.reader(fileInput)
+
             i = 0
-            for row in csv.reader(fileInput):
+
+            for row in csvOutput:
                 items = [
                     QtGui.QStandardItem(field)
                     for field in row
                 ]
                 self.model.appendRow(items)
-      
-                if row[0] == 'True':
+        
+                if not allSelected and row[0] == 'True':
                     self.tableView.selectionModel().select(self.model.index(i, 0), QtCore.QItemSelectionModel.SelectionFlag.Select | QtCore.QItemSelectionModel.SelectionFlag.Rows)
                 i += 1
 
         self.tableView.setColumnHidden(0, True)
+
+        self.updateButtonLabels()
+        self.tableView.selectionModel().selectionChanged.connect(self.updateButtonLabels)
 
     def saveTable(self):
         with open(self.paymentsFile, "w") as fileOutput:
@@ -153,6 +166,18 @@ class Ui_MainWindow(object):
     def payButton(self, MainWindow):
         self.saveTable()
         self.updateBalanceUi(MainWindow)
+
+    def updateButtonLabels(self):
+        payButtonText =  "Pay all Scholars"
+        claimButtonText = "Claim from all"
+
+        if len(self.tableView.selectionModel().selectedRows()) > 0:
+            payButtonText = "Pay selected Scholars"
+            claimButtonText = "Claim from selection"
+
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Ok).setText(payButtonText)
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Open).setText(claimButtonText)
+
 
 if __name__ == "__main__":
     import sys
